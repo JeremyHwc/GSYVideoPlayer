@@ -51,7 +51,11 @@ public class IjkPlayerManager implements IPlayerManager {
     }
 
     @Override
-    public void initVideoPlayer(Context context, Message msg, List<VideoOptionModel> optionModelList, ICacheManager cacheManager) {
+    public void initVideoPlayer(Context context,
+                                Message msg,
+                                List<VideoOptionModel> optionModelList,
+                                ICacheManager cacheManager) {
+
         mediaPlayer = (ijkLibLoader == null) ? new IjkMediaPlayer() : new IjkMediaPlayer(ijkLibLoader);
         mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
         mediaPlayer.setOnNativeInvokeListener(new IjkMediaPlayer.OnNativeInvokeListener() {
@@ -79,10 +83,10 @@ public class IjkPlayerManager implements IPlayerManager {
             } else {
                 if (!TextUtils.isEmpty(url)) {
                     Uri uri = Uri.parse(url);
-                    if (uri.getScheme().equals(ContentResolver.SCHEME_ANDROID_RESOURCE)) {
+                    if (uri.getScheme().equals(ContentResolver.SCHEME_ANDROID_RESOURCE)) {//本地
                         RawDataSourceProvider rawDataSourceProvider = RawDataSourceProvider.create(context, uri);
                         mediaPlayer.setDataSource(rawDataSourceProvider);
-                    } else {
+                    } else {//网络
                         mediaPlayer.setDataSource(url, gsyModel.getMapHeadData());
                     }
                 } else {
@@ -283,10 +287,12 @@ public class IjkPlayerManager implements IPlayerManager {
             for (VideoOptionModel videoOptionModel : optionModelList) {
                 if (videoOptionModel.getValueType() == VideoOptionModel.VALUE_TYPE_INT) {
                     ijkMediaPlayer.setOption(videoOptionModel.getCategory(),
-                            videoOptionModel.getName(), videoOptionModel.getValueInt());
+                            videoOptionModel.getName(),
+                            videoOptionModel.getValueInt());
                 } else {
                     ijkMediaPlayer.setOption(videoOptionModel.getCategory(),
-                            videoOptionModel.getName(), videoOptionModel.getValueString());
+                            videoOptionModel.getName(),
+                            videoOptionModel.getValueString());
                 }
             }
         }

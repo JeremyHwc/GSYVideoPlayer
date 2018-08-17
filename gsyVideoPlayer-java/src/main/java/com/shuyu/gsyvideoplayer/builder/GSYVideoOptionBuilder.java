@@ -128,7 +128,7 @@ public class GSYVideoOptionBuilder {
     //http请求头
     protected Map<String, String> mMapHeadData;
 
-    //视频状体回调
+    //视频状态回调
     protected VideoAllCallBack mVideoAllCallBack;
 
     //点击锁屏的回调

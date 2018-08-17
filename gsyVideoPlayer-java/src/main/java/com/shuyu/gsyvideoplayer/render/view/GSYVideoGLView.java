@@ -32,7 +32,10 @@ import java.io.File;
  * 原 @author sheraz.khilji
  */
 @SuppressLint("ViewConstructor")
-public class GSYVideoGLView extends GLSurfaceView implements GLSurfaceListener, IGSYRenderView, MeasureHelper.MeasureFormVideoParamsListener {
+public class GSYVideoGLView extends GLSurfaceView
+        implements GLSurfaceListener,
+        IGSYRenderView,
+        MeasureHelper.MeasureFormVideoParamsListener {
 
     private static final String TAG = GSYVideoGLView.class.getName();
     /**

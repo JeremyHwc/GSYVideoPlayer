@@ -38,7 +38,11 @@ import static com.shuyu.gsyvideoplayer.utils.CommonUtil.hideNavKey;
  * Created by guoshuyu on 2017/8/2.
  */
 
-public abstract class GSYVideoControlView extends GSYVideoView implements View.OnClickListener, View.OnTouchListener, SeekBar.OnSeekBarChangeListener {
+public abstract class GSYVideoControlView
+        extends GSYVideoView
+        implements View.OnClickListener,
+        View.OnTouchListener,
+        SeekBar.OnSeekBarChangeListener {
 
 
     //手指放下的位置
@@ -972,6 +976,10 @@ public abstract class GSYVideoControlView extends GSYVideoView implements View.O
     }
 
 
+    /**
+     * 添加视频缩略图
+     * @param thumb 缩略图View
+     */
     protected void resolveThumbImage(View thumb) {
         if (mThumbImageViewLayout != null) {
             mThumbImageViewLayout.removeAllViews();

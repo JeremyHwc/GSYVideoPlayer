@@ -15,8 +15,6 @@ import com.shuyu.gsyvideoplayer.utils.Debuger;
 import com.shuyu.gsyvideoplayer.video.StandardGSYVideoPlayer;
 import com.shuyu.gsyvideoplayer.video.base.GSYBaseVideoPlayer;
 
-import moe.codeest.enviews.ENDownloadView;
-
 /**
  带封面
  Created by guoshuyu on 2017/9/3.
@@ -58,9 +56,13 @@ public class SampleCoverVideo extends StandardGSYVideoPlayer {
         return R.layout.video_layout_cover;
     }
 
+    /**
+     * 加载封面图
+     */
     public void loadCoverImage(String url, int res) {
         mCoverOriginUrl = url;
         mDefaultRes = res;
+        //通过glide加载视频1秒时的那一帧为封面图
         Glide.with(getContext().getApplicationContext())
                 .setDefaultRequestOptions(
                         new RequestOptions()

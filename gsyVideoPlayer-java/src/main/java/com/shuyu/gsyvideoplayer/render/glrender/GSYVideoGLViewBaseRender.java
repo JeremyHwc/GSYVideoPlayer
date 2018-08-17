@@ -25,7 +25,9 @@ import javax.microedition.khronos.opengles.GL10;
  *
  */
 @SuppressLint("ViewConstructor")
-public abstract class GSYVideoGLViewBaseRender implements GLSurfaceView.Renderer, SurfaceTexture.OnFrameAvailableListener {
+public abstract class GSYVideoGLViewBaseRender
+        implements GLSurfaceView.Renderer,
+        SurfaceTexture.OnFrameAvailableListener {
 
     //是否需要高清截图
     protected boolean mHighShot = false;

@@ -24,7 +24,9 @@ import com.shuyu.gsyvideoplayer.utils.MeasureHelper;
  * Created by guoshuyu on 2017/8/2.
  */
 
-public abstract class GSYTextureRenderView extends FrameLayout implements IGSYSurfaceListener, MeasureHelper.MeasureFormVideoParamsListener {
+public abstract class GSYTextureRenderView extends FrameLayout
+        implements IGSYSurfaceListener,
+        MeasureHelper.MeasureFormVideoParamsListener {
 
     //native绘制
     protected Surface mSurface;

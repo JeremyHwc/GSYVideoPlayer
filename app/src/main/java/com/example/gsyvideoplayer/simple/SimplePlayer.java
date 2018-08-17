@@ -11,7 +11,6 @@ import com.shuyu.gsyvideoplayer.GSYVideoManager;
 import com.shuyu.gsyvideoplayer.utils.OrientationUtils;
 import com.shuyu.gsyvideoplayer.video.StandardGSYVideoPlayer;
 
-
 public class SimplePlayer extends AppCompatActivity {
 
     StandardGSYVideoPlayer videoPlayer;

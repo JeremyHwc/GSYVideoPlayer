@@ -35,7 +35,9 @@ import static com.shuyu.gsyvideoplayer.utils.CommonUtil.getTextSpeed;
  * Created by guoshuyu on 2017/8/2.
  */
 
-public abstract class GSYVideoView extends GSYTextureRenderView implements GSYMediaPlayerListener {
+public abstract class GSYVideoView
+        extends GSYTextureRenderView
+        implements GSYMediaPlayerListener {
 
     //正常
     public static final int CURRENT_STATE_NORMAL = 0;

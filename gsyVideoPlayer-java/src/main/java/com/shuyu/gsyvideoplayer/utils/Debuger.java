@@ -13,7 +13,7 @@ public class Debuger {
     
     static final String LOG_TAG = "GSYVideoPlayer";
     
-    static boolean DEBUG_TAG = false;
+    static boolean DEBUG_TAG = true;
 
     public static void enable() {
         DEBUG_TAG = true;

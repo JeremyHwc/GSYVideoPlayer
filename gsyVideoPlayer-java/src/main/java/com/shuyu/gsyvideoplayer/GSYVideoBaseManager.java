@@ -1,7 +1,6 @@
 package com.shuyu.gsyvideoplayer;
 
 import android.content.Context;
-import android.content.Intent;
 import android.media.MediaPlayer;
 import android.os.Handler;
 import android.os.HandlerThread;
@@ -35,9 +34,16 @@ import tv.danmaku.ijk.media.player.IMediaPlayer;
  * Created by guoshuyu on 2018/1/25.
  */
 
-public abstract class GSYVideoBaseManager implements IMediaPlayer.OnPreparedListener, IMediaPlayer.OnCompletionListener,
-        IMediaPlayer.OnBufferingUpdateListener, IMediaPlayer.OnSeekCompleteListener, IMediaPlayer.OnErrorListener,
-        IMediaPlayer.OnVideoSizeChangedListener, IMediaPlayer.OnInfoListener, ICacheManager.ICacheAvailableListener, GSYVideoViewBridge {
+public abstract class GSYVideoBaseManager implements
+        IMediaPlayer.OnPreparedListener,
+        IMediaPlayer.OnCompletionListener,
+        IMediaPlayer.OnBufferingUpdateListener,
+        IMediaPlayer.OnSeekCompleteListener,
+        IMediaPlayer.OnErrorListener,
+        IMediaPlayer.OnVideoSizeChangedListener,
+        IMediaPlayer.OnInfoListener,
+        ICacheManager.ICacheAvailableListener,
+        GSYVideoViewBridge {
 
     public static String TAG = "GSYVideoBaseManager";
 

@@ -35,7 +35,8 @@ import static com.shuyu.gsyvideoplayer.utils.CommonUtil.showSupportActionBar;
  * Created by shuyu on 2016/11/17.
  */
 
-public abstract class GSYBaseVideoPlayer extends GSYVideoControlView {
+public abstract class GSYBaseVideoPlayer
+        extends GSYVideoControlView {
 
     //保存系统状态ui
     protected int mSystemUiVisibility;
