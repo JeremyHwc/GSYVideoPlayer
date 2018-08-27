@@ -68,7 +68,6 @@ public class IjkPlayerManager implements IPlayerManager {
         GSYModel gsyModel = (GSYModel) msg.obj;
         String url = gsyModel.getUrl();
 
-
         try {
             //开启硬解码
             if (GSYVideoType.isMediaCodec()) {

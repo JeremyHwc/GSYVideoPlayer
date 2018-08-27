@@ -4,6 +4,7 @@
     android:layout_height="match_parent"
     android:background="@android:color/black">
 
+    <!--播放器装载器-->
     <RelativeLayout
         android:id="@+id/surface_container"
         android:layout_width="match_parent"
@@ -12,6 +13,7 @@
 
     </RelativeLayout>
 
+    <!--缩略图-->
     <RelativeLayout
         android:id="@+id/thumb"
         android:layout_width="match_parent"
@@ -25,6 +27,7 @@
         android:background="#000000"
         android:scaleType="fitCenter" />
 
+    <!--底部操作栏-->
     <LinearLayout
         android:id="@+id/layout_bottom"
         android:layout_width="match_parent"
@@ -35,6 +38,7 @@
         android:orientation="horizontal"
         android:visibility="invisible">
 
+        <!--当前播放位置-->
         <TextView
             android:id="@+id/current"
             android:layout_width="wrap_content"
@@ -43,6 +47,7 @@
             android:text="00:00"
             android:textColor="#ffffff" />
 
+        <!--播放进度-->
         <SeekBar
             android:id="@+id/progress"
             android:layout_width="0dp"
@@ -58,6 +63,7 @@
             android:progressDrawable="@drawable/video_seek_progress"
             android:thumb="@drawable/video_seek_thumb" />
 
+        <!--总时长-->
         <TextView
             android:id="@+id/total"
             android:layout_width="wrap_content"
@@ -66,6 +72,7 @@
             android:text="00:00"
             android:textColor="#ffffff" />
 
+        <!--全屏-->
         <ImageView
             android:id="@+id/fullscreen"
             android:layout_width="wrap_content"
@@ -75,6 +82,7 @@
             android:src="@drawable/video_enlarge" />
     </LinearLayout>
 
+    <!--下载进度-->
     <ProgressBar
         android:id="@+id/bottom_progressbar"
         style="?android:attr/progressBarStyleHorizontal"
@@ -84,6 +92,7 @@
         android:max="100"
         android:progressDrawable="@drawable/video_progress" />
 
+    <!--返回-->
     <ImageView
         android:id="@+id/back_tiny"
         android:layout_width="24dp"
@@ -92,6 +101,7 @@
         android:layout_marginTop="6dp"
         android:visibility="gone" />
 
+    <!--顶部栏-->
     <LinearLayout
         android:id="@+id/layout_top"
         android:layout_width="match_parent"
@@ -99,6 +109,7 @@
         android:background="@drawable/video_title_bg"
         android:gravity="center_vertical">
 
+        <!--返回-->
         <ImageView
             android:id="@+id/back"
             android:layout_width="48dp"
@@ -107,6 +118,7 @@
             android:scaleType="centerInside"
             android:src="@drawable/video_back" />
 
+        <!--视频标题-->
         <TextView
             android:id="@+id/title"
             android:layout_width="wrap_content"
@@ -116,6 +128,7 @@
             android:textSize="18sp" />
     </LinearLayout>
 
+    <!--加载转转转-->
     <moe.codeest.enviews.ENDownloadView
         android:id="@+id/loading"
         android:layout_width="28dp"
@@ -124,6 +137,7 @@
         android:layout_centerVertical="true"
         android:visibility="invisible" />
 
+    <!--播放暂停-->
     <moe.codeest.enviews.ENPlayView
         android:id="@+id/start"
         android:layout_width="60dp"
@@ -132,7 +146,7 @@
         android:layout_centerVertical="true"
         android:layout_gravity="center_vertical" />
 
-
+    <!--关闭（小按钮）-->
     <ImageView
         android:id="@+id/small_close"
         android:layout_width="30dp"
@@ -143,6 +157,7 @@
         android:src="@drawable/video_small_close"
         android:visibility="gone" />
 
+    <!--锁屏按钮-->
     <ImageView
         android:id="@+id/lock_screen"
         android:layout_width="30dp"

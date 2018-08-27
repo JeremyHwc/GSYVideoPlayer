@@ -2,7 +2,6 @@ package com.example.gsyvideoplayer;
 
 import android.content.res.Configuration;
 import android.os.Bundle;
-import android.os.Environment;
 import android.support.v4.widget.NestedScrollView;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
@@ -11,20 +10,13 @@ import android.widget.RelativeLayout;
 
 import com.example.gsyvideoplayer.video.LandLayoutVideo;
 import com.shuyu.gsyvideoplayer.GSYVideoManager;
+import com.shuyu.gsyvideoplayer.builder.GSYVideoOptionBuilder;
 import com.shuyu.gsyvideoplayer.listener.GSYSampleCallBack;
 import com.shuyu.gsyvideoplayer.listener.GSYVideoProgressListener;
-import com.shuyu.gsyvideoplayer.model.VideoOptionModel;
-import com.shuyu.gsyvideoplayer.utils.FileUtils;
-import com.shuyu.gsyvideoplayer.video.base.GSYVideoPlayer;
-
-import com.shuyu.gsyvideoplayer.builder.GSYVideoOptionBuilder;
 import com.shuyu.gsyvideoplayer.listener.LockClickListener;
 import com.shuyu.gsyvideoplayer.utils.Debuger;
 import com.shuyu.gsyvideoplayer.utils.OrientationUtils;
-
-
-import java.util.ArrayList;
-import java.util.List;
+import com.shuyu.gsyvideoplayer.video.base.GSYVideoPlayer;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -239,8 +231,8 @@ public class DetailPlayer extends AppCompatActivity {
         //String url = "ijkhttphook:https://res.exexm.com/cw_145225549855002";
 
         //
-        // String url = "http://7xjmzj.com1.z0.glb.clouddn.com/20171026175005_JObCxCE2.mp4";
-        String url = "http://hjq-1257036536.cos.ap-shanghai.myqcloud.com/m3u8/m1/out2.m3u8";
+//         String url = "http://7xjmzj.com1.z0.glb.clouddn.com/20171026175005_JObCxCE2.mp4";
+//        String url = "http://hjq-1257036536.cos.ap-shanghai.myqcloud.com/m3u8/m1/out2.m3u8";
         //String url = "http://223.110.243.138/PLTV/2510088/224/3221227177/index.m3u8";
         //String url = "http://qiniu.carmmi.com/image/132451525666042.mp4";
         //String url = "http://ucp.wn.sunmath.cn/file-upload/gYQJHxK9iNQKJeWyS/V80418-103803.mp4?rc_uid=7sCFCGoaF2iTc9vH9&rc_token=prJK-xGutKmy2LDQO-OZASjob0o1u_s3e5SgMHmgjtn";
@@ -250,7 +242,7 @@ public class DetailPlayer extends AppCompatActivity {
         //String url =  "http://ipsimg-huabei2.speiyou.cn/010/video/other/20180427/40288b156241ec6301624243bdf7021e/40288b156290270d0162a3e7eb2e0726/1524814477/movie.mp4";
         //String url =  "http://ipsimg-huabei2.speiyou.cn/010/video/other/20180424/40288b156290270d0162a3db8cdd033e/40288b156290270d0162a3e8207f074f/e787a64c-f2d0-48fe-896d-246af05f111a.mp4";
 
-        //String url =  "http://video.7k.cn/app_video/20171202/6c8cf3ea/v.m3u8.mp4";
+        String url =  "http://video.7k.cn/app_video/20171202/6c8cf3ea/v.m3u8.mp4";
         //String url =  "http://devimages.apple.com.edgekey.net/streaming/examples/bipbop_4x3/bipbop_4x3_variant.m3u8";
         //String url =  "https://cdn61.ytbbs.tv/cn/tv/55550/55550-1/play.m3u8?md5=v4sI4lWlo4XojzeAjgBGaQ&expires=1521204012&token=55550";
         //String url =  "http://1253492636.vod2.myqcloud.com/2e5fc148vodgzp1253492636/d08af82d4564972819086152830/plHZZoSkje0A.mp4";
@@ -268,7 +260,7 @@ public class DetailPlayer extends AppCompatActivity {
         //String url = "http://hcjs2ra2rytd8v8np1q.exp.bcevod.com/mda-hegtjx8n5e8jt9zv/mda-hegtjx8n5e8jt9zv.m3u8";
         //String url = "http://7xse1z.com1.z0.glb.clouddn.com/1491813192";
         //String url = "http://ocgk7i2aj.bkt.clouddn.com/17651ac2-693c-47e9-b2d2-b731571bad37";
-        //String url = "http://111.198.24.133:83/yyy_login_server/pic/YB059284/97778276040859/1.mp4";
+//        String url = "http://111.198.24.133:83/yyy_login_server/pic/YB059284/97778276040859/1.mp4";
         //String url = "http://vr.tudou.com/v2proxy/v?sid=95001&id=496378919&st=3&pw=";
         //String url = "http://pl-ali.youku.com/playlist/m3u8?type=mp4&ts=1490185963&keyframe=0&vid=XMjYxOTQ1Mzg2MA==&ep=ciadGkiFU8cF4SvajD8bYyuwJiYHXJZ3rHbN%2FrYDAcZuH%2BrC6DPcqJ21TPs%3D&sid=04901859548541247bba8&token=0524&ctype=12&ev=1&oip=976319194";
         //String url = "http://hls.ciguang.tv/hdtv/video.m3u8";

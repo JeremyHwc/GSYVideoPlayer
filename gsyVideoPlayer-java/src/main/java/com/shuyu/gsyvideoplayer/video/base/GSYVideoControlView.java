@@ -201,13 +201,15 @@ public abstract class GSYVideoControlView
         mStartButton = findViewById(R.id.start);
         mTitleTextView = (TextView) findViewById(R.id.title);
         mBackButton = (ImageView) findViewById(R.id.back);
-        mFullscreenButton = (ImageView) findViewById(R.id.fullscreen);
-        mProgressBar = (SeekBar) findViewById(R.id.progress);
-        mCurrentTimeTextView = (TextView) findViewById(R.id.current);
-        mTotalTimeTextView = (TextView) findViewById(R.id.total);
-        mBottomContainer = (ViewGroup) findViewById(R.id.layout_bottom);
         mTopContainer = (ViewGroup) findViewById(R.id.layout_top);
+
+        mCurrentTimeTextView = (TextView) findViewById(R.id.current);
+        mProgressBar = (SeekBar) findViewById(R.id.progress);
         mBottomProgressBar = (ProgressBar) findViewById(R.id.bottom_progressbar);
+        mTotalTimeTextView = (TextView) findViewById(R.id.total);
+        mFullscreenButton = (ImageView) findViewById(R.id.fullscreen);
+        mBottomContainer = (ViewGroup) findViewById(R.id.layout_bottom);
+
         mThumbImageViewLayout = (RelativeLayout) findViewById(R.id.thumb);
         mLockScreen = (ImageView) findViewById(R.id.lock_screen);
 
@@ -260,8 +262,7 @@ public abstract class GSYVideoControlView
             mLockScreen.setOnClickListener(new OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    if (mCurrentState == CURRENT_STATE_AUTO_COMPLETE ||
-                            mCurrentState == CURRENT_STATE_ERROR) {
+                    if (mCurrentState == CURRENT_STATE_AUTO_COMPLETE || mCurrentState == CURRENT_STATE_ERROR) {
                         return;
                     }
                     lockTouchLogic();
@@ -304,7 +305,7 @@ public abstract class GSYVideoControlView
     /**
      * 设置播放显示状态
      *
-     * @param state
+     * @param state 当前状态
      */
     @Override
     protected void setStateAndUi(int state) {

@@ -31,12 +31,11 @@ import static com.shuyu.gsyvideoplayer.utils.CommonUtil.showNavKey;
 import static com.shuyu.gsyvideoplayer.utils.CommonUtil.showSupportActionBar;
 
 /**
- * 处理全屏和小屏幕逻辑
+ * 处理播放控件，全屏和小屏幕逻辑
  * Created by shuyu on 2016/11/17.
  */
 
-public abstract class GSYBaseVideoPlayer
-        extends GSYVideoControlView {
+public abstract class GSYBaseVideoPlayer extends GSYVideoControlView {
 
     //保存系统状态ui
     protected int mSystemUiVisibility;

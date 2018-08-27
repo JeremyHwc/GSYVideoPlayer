@@ -34,6 +34,7 @@ dependencies {
 
     def viewDependencies = rootProject.ext.viewDependencies
     def dataDependencies = rootProject.ext.dataDependencies
+
     api viewDependencies.ijkplayer_java
     api viewDependencies.ijkplayer_exo
     api viewDependencies.transitionseverywhere

@@ -29,8 +29,8 @@ public class OrientationUtils {
     private boolean mRotateWithSystem = true;
 
     /**
-     * @param activity
-     * @param gsyVideoPlayer
+     * @param activity       山下文
+     * @param gsyVideoPlayer player
      */
     public OrientationUtils(Activity activity, GSYBaseVideoPlayer gsyVideoPlayer) {
         this.activity = activity;

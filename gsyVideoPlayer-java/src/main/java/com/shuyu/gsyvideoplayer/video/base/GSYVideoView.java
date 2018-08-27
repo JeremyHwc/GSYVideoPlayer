@@ -174,11 +174,18 @@ public abstract class GSYVideoView
         init(context);
     }
 
+    /**
+     * 暂停时使用绘制画面显示暂停、避免黑屏
+     */
     @Override
     protected void showPauseCover() {
-        if (mCurrentState == CURRENT_STATE_PAUSE && mFullPauseBitmap != null
-                && !mFullPauseBitmap.isRecycled() && mShowPauseCover
-                && mSurface != null && mSurface.isValid()) {
+        if (mCurrentState == CURRENT_STATE_PAUSE
+                && mFullPauseBitmap != null
+                && !mFullPauseBitmap.isRecycled()
+                && mShowPauseCover
+                && mSurface != null
+                && mSurface.isValid()) {
+
             if (getGSYVideoManager().isSurfaceSupportLockCanvas()) {
                 try {
                     RectF rectF = new RectF(0, 0, mTextureView.getWidth(), mTextureView.getHeight());
@@ -195,11 +202,16 @@ public abstract class GSYVideoView
 
     }
 
+    /**
+     * 清除暂停画面
+     */
     @Override
     protected void releasePauseCover() {
         try {
-            if (mCurrentState != CURRENT_STATE_PAUSE && mFullPauseBitmap != null
-                    && !mFullPauseBitmap.isRecycled() && mShowPauseCover) {
+            if (mCurrentState != CURRENT_STATE_PAUSE
+                    && mFullPauseBitmap != null
+                    && !mFullPauseBitmap.isRecycled()
+                    && mShowPauseCover) {
                 mFullPauseBitmap.recycle();
                 mFullPauseBitmap = null;
             }
@@ -208,6 +220,9 @@ public abstract class GSYVideoView
         }
     }
 
+    /**
+     * 获取视频宽度
+     */
     @Override
     public int getCurrentVideoWidth() {
         if (getGSYVideoManager() != null) {
@@ -216,6 +231,9 @@ public abstract class GSYVideoView
         return 0;
     }
 
+    /**
+     * 获取视频高度
+     */
     @Override
     public int getCurrentVideoHeight() {
         if (getGSYVideoManager() != null) {
@@ -224,6 +242,7 @@ public abstract class GSYVideoView
         return 0;
     }
 
+    // TODO: 2018/8/22 什么作用
     @Override
     public int getVideoSarNum() {
         if (getGSYVideoManager() != null) {
@@ -232,6 +251,7 @@ public abstract class GSYVideoView
         return 0;
     }
 
+    // TODO: 2018/8/22 什么作用
     @Override
     public int getVideoSarDen() {
         if (getGSYVideoManager() != null) {
@@ -241,7 +261,7 @@ public abstract class GSYVideoView
     }
 
     protected void updatePauseCover() {
-        if ((mFullPauseBitmap == null || mFullPauseBitmap.isRecycled()) && mShowPauseCover) {
+        if ((mFullPauseBitmap == null || mFullPauseBitmap.isRecycled())  && mShowPauseCover) {
             try {
                 initCover();
             } catch (Exception e) {
@@ -265,7 +285,7 @@ public abstract class GSYVideoView
 
         initInflate(mContext);
 
-        mTextureViewContainer = (ViewGroup) findViewById(R.id.surface_container);
+        mTextureViewContainer = (ViewGroup) findViewById(R.id.surface_container);//Suface装载器
         if (isInEditMode())
             return;
         mScreenWidth = getActivityContext().getResources().getDisplayMetrics().widthPixels;
@@ -298,10 +318,10 @@ public abstract class GSYVideoView
      * 开始播放逻辑
      */
     protected void startButtonLogic() {
-        if (mVideoAllCallBack != null && mCurrentState == CURRENT_STATE_NORMAL) {
+        if (mVideoAllCallBack != null && mCurrentState == CURRENT_STATE_NORMAL) {//正常点击播放
             Debuger.printfLog("onClickStartIcon");
             mVideoAllCallBack.onClickStartIcon(mOriginUrl, mTitle, this);
-        } else if (mVideoAllCallBack != null) {
+        } else if (mVideoAllCallBack != null) {//异常点击播放
             Debuger.printfLog("onClickStartError");
             mVideoAllCallBack.onClickStartError(mOriginUrl, mTitle, this);
         }
@@ -315,7 +335,12 @@ public abstract class GSYVideoView
         startPrepare();
     }
 
+    /**
+     * 开始准备
+     * 包括视频回调onStartPrepared，正在准备的界面
+     */
     protected void startPrepare() {
+        // TODO: 2018/8/22 这里为什么调用onCompletion()
         if (getGSYVideoManager().listener() != null) {
             getGSYVideoManager().listener().onCompletion();
         }
@@ -330,7 +355,7 @@ public abstract class GSYVideoView
         ((Activity) getActivityContext()).getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         mBackUpPlayingBufferState = -1;
         getGSYVideoManager().prepare(mUrl, (mMapHeadData == null) ? new HashMap<String, String>() : mMapHeadData, mLooping, mSpeed, mCache, mCachePath);
-        setStateAndUi(CURRENT_STATE_PREPAREING);
+        setStateAndUi(CURRENT_STATE_PREPAREING);//设置正在准备的界面
     }
 
     /**
@@ -396,7 +421,6 @@ public abstract class GSYVideoView
     protected void onLossTransientCanDuck() {
     }
 
-
     /**
      * 设置播放URL
      *
@@ -420,7 +444,12 @@ public abstract class GSYVideoView
      * @param title         title
      * @return
      */
-    public boolean setUp(String url, boolean cacheWithPlay, File cachePath, Map<String, String> mapHeadData, String title) {
+    public boolean setUp(String url,
+                         boolean cacheWithPlay,
+                         File cachePath,
+                         Map<String, String> mapHeadData,
+                         String title) {
+
         if (setUp(url, cacheWithPlay, cachePath, title)) {
             if (this.mMapHeadData != null) {
                 this.mMapHeadData.clear();
@@ -458,7 +487,12 @@ public abstract class GSYVideoView
      * @param changeState   是否修改状态
      * @return
      */
-    protected boolean setUp(String url, boolean cacheWithPlay, File cachePath, String title, boolean changeState) {
+    protected boolean setUp(String url,
+                            boolean cacheWithPlay,
+                            File cachePath,
+                            String title,
+                            boolean changeState) {
+
         mCache = cacheWithPlay;
         mCachePath = cachePath;
         mOriginUrl = url;
@@ -553,7 +587,6 @@ public abstract class GSYVideoView
         }, 500);
     }
 
-
     /**
      * 播放错误的时候，删除缓存文件
      */
@@ -566,6 +599,9 @@ public abstract class GSYVideoView
         mUrl = mOriginUrl;
     }
 
+    /**
+     * 视频已经准备好
+     */
     @Override
     public void onPrepared() {
 
@@ -600,7 +636,7 @@ public abstract class GSYVideoView
         if (!mIfCurrentIsFullscreen)
             getGSYVideoManager().setLastListener(null);
         mAudioManager.abandonAudioFocus(onAudioFocusChangeListener);
-        ((Activity) getActivityContext()).getWindow().clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+        ((Activity) getActivityContext()).getWindow().clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);//播放完毕去掉屏幕敞亮
 
         releaseNetWorkState();
 
