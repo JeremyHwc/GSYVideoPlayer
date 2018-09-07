@@ -78,11 +78,16 @@ public class GSYRenderView {
     /**
      * 添加播放的view
      */
-    public void addView(final Context context, final ViewGroup textureViewContainer, final int rotate,
+    public void addView(final Context context,
+                        final ViewGroup textureViewContainer,
+                        final int rotate,
                         final IGSYSurfaceListener gsySurfaceListener,
                         final MeasureHelper.MeasureFormVideoParamsListener videoParamsListener,
-                        final GSYVideoGLView.ShaderInterface effect, final float[] transform,
-                        final GSYVideoGLViewBaseRender customRender, int mode) {
+                        final GSYVideoGLView.ShaderInterface effect,
+                        final float[] transform,
+                        final GSYVideoGLViewBaseRender customRender,
+                        int mode) {
+
         if (GSYVideoType.getRenderType() == GSYVideoType.SUFRACE) {
             mShowView = GSYSurfaceView.addSurfaceView(context, textureViewContainer, rotate, gsySurfaceListener, videoParamsListener);
         } else if (GSYVideoType.getRenderType() == GSYVideoType.GLSURFACE) {

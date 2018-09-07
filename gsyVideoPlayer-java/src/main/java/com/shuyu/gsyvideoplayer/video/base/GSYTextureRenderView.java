@@ -24,9 +24,12 @@ import com.shuyu.gsyvideoplayer.utils.MeasureHelper;
  * Created by guoshuyu on 2017/8/2.
  */
 
-public abstract class GSYTextureRenderView extends FrameLayout
+public abstract class GSYTextureRenderView
+        extends FrameLayout
         implements IGSYSurfaceListener,
         MeasureHelper.MeasureFormVideoParamsListener {
+
+    protected static final String TAG="VIDEO_UI";//added by jeremy
 
     //native绘制
     protected Surface mSurface;
@@ -37,7 +40,7 @@ public abstract class GSYTextureRenderView extends FrameLayout
     //渲染控件父类
     protected ViewGroup mTextureViewContainer;
 
-    //满屏填充暂停为徒
+    //满屏填充暂停位图
     protected Bitmap mFullPauseBitmap;
 
     //GL的滤镜

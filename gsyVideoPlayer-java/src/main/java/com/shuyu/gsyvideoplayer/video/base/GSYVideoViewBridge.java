@@ -55,7 +55,7 @@ public interface GSYVideoViewBridge {
     int getBufferedPercentage();
 
     /**
-     * 是否播放器
+     * 释放播放器
      */
     void releaseMediaPlayer();
 
@@ -130,9 +130,9 @@ public interface GSYVideoViewBridge {
 
     void pause();
 
-    int getVideoWidth();
+    int getVideoWidth();//获取视频宽度
 
-    int getVideoHeight();
+    int getVideoHeight();//获取视频高度
 
     boolean isPlaying();
 

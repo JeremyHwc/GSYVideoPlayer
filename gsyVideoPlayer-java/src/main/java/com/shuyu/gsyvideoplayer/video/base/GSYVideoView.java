@@ -11,6 +11,7 @@ import android.support.annotation.AttrRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.InflateException;
 import android.view.Surface;
 import android.view.View;
@@ -35,6 +36,7 @@ import static com.shuyu.gsyvideoplayer.utils.CommonUtil.getTextSpeed;
  * Created by guoshuyu on 2017/8/2.
  */
 
+@SuppressWarnings("unused")
 public abstract class GSYVideoView
         extends GSYTextureRenderView
         implements GSYMediaPlayerListener {
@@ -186,7 +188,7 @@ public abstract class GSYVideoView
                 && mSurface != null
                 && mSurface.isValid()) {
 
-            if (getGSYVideoManager().isSurfaceSupportLockCanvas()) {
+            if (getGSYVideoManager().isSurfaceSupportLockCanvas()) {//这里排除exo播放器
                 try {
                     RectF rectF = new RectF(0, 0, mTextureView.getWidth(), mTextureView.getHeight());
                     Canvas canvas = mSurface.lockCanvas(new Rect(0, 0, mTextureView.getWidth(), mTextureView.getHeight()));
@@ -260,8 +262,9 @@ public abstract class GSYVideoView
         return 0;
     }
 
+    // TODO: 2018/9/7 有点不太明白
     protected void updatePauseCover() {
-        if ((mFullPauseBitmap == null || mFullPauseBitmap.isRecycled())  && mShowPauseCover) {
+        if ((mFullPauseBitmap == null || mFullPauseBitmap.isRecycled()) && mShowPauseCover) {
             try {
                 initCover();
             } catch (Exception e) {
@@ -275,6 +278,14 @@ public abstract class GSYVideoView
         return CommonUtil.getActivityContext(getContext());
     }
 
+    /**
+     * 初始化
+     * （1）获取上下文
+     * （2）填充布局
+     * （3）渲染器父布局
+     * （4）屏幕宽高
+     * （6）音频管理AudioManager初始化
+     */
     protected void init(Context context) {
 
         if (getActivityContext() != null) {
@@ -291,9 +302,11 @@ public abstract class GSYVideoView
         mScreenWidth = getActivityContext().getResources().getDisplayMetrics().widthPixels;
         mScreenHeight = getActivityContext().getResources().getDisplayMetrics().heightPixels;
         mAudioManager = (AudioManager) getActivityContext().getApplicationContext().getSystemService(Context.AUDIO_SERVICE);
-
     }
 
+    /**
+     * 加载布局到该FrameLayout中，如需自定义布局，可直接复写{@link #getLayoutId}方法
+     */
     protected void initInflate(Context context) {
         try {
             View.inflate(context, getLayoutId(), this);
@@ -318,12 +331,12 @@ public abstract class GSYVideoView
      * 开始播放逻辑
      */
     protected void startButtonLogic() {
-        if (mVideoAllCallBack != null && mCurrentState == CURRENT_STATE_NORMAL) {//正常点击播放
+        if (mVideoAllCallBack != null && mCurrentState == CURRENT_STATE_NORMAL) {
             Debuger.printfLog("onClickStartIcon");
-            mVideoAllCallBack.onClickStartIcon(mOriginUrl, mTitle, this);
-        } else if (mVideoAllCallBack != null) {//异常点击播放
+            mVideoAllCallBack.onClickStartIcon(mOriginUrl, mTitle, this);//正常点击播放
+        } else if (mVideoAllCallBack != null) {
             Debuger.printfLog("onClickStartError");
-            mVideoAllCallBack.onClickStartError(mOriginUrl, mTitle, this);
+            mVideoAllCallBack.onClickStartError(mOriginUrl, mTitle, this);//异常点击播放
         }
         prepareVideo();
     }
@@ -337,10 +350,11 @@ public abstract class GSYVideoView
 
     /**
      * 开始准备
-     * 包括视频回调onStartPrepared，正在准备的界面
+     * （1）回调onStartPrepared；
+     * （2）显示正在准备的界面
      */
     protected void startPrepare() {
-        // TODO: 2018/8/22 这里为什么调用onCompletion()
+        // TODO: 2018/8/22 这里为什么调用onCompletion()，解释：结束上一次的监听
         if (getGSYVideoManager().listener() != null) {
             getGSYVideoManager().listener().onCompletion();
         }
@@ -365,16 +379,20 @@ public abstract class GSYVideoView
         @Override
         public void onAudioFocusChange(int focusChange) {
             switch (focusChange) {
-                case AudioManager.AUDIOFOCUS_GAIN:
+                case AudioManager.AUDIOFOCUS_GAIN://获得音频焦点
+                    Log.e(TAG, "onAudioFocusChange:AUDIOFOCUS_GAIN");
                     onGankAudio();
                     break;
-                case AudioManager.AUDIOFOCUS_LOSS:
+                case AudioManager.AUDIOFOCUS_LOSS://失去音频焦点
+                    Log.e(TAG, "onAudioFocusChange:AUDIOFOCUS_LOSS");
                     onLossAudio();
                     break;
-                case AudioManager.AUDIOFOCUS_LOSS_TRANSIENT:
+                case AudioManager.AUDIOFOCUS_LOSS_TRANSIENT://表示这个焦点请求是暂时的，很快会放弃这个焦点
+                    Log.e(TAG, "onAudioFocusChange:AUDIOFOCUS_LOSS_TRANSIENT");
                     onLossTransientAudio();
                     break;
-                case AudioManager.AUDIOFOCUS_LOSS_TRANSIENT_CAN_DUCK:
+                case AudioManager.AUDIOFOCUS_LOSS_TRANSIENT_CAN_DUCK://暂时失去焦点，但是可以降低音量播放
+                    Log.e(TAG, "onAudioFocusChange:AUDIOFOCUS_LOSS_TRANSIENT_CAN_DUCK");
                     onLossTransientCanDuck();
                     break;
             }
@@ -393,6 +411,7 @@ public abstract class GSYVideoView
     protected void onLossAudio() {
         this.post(new Runnable() {
             public void run() {
+                Log.e(TAG, "onLossAudio:mReleaseWhenLossAudio----" + mReleaseWhenLossAudio);
                 if (GSYVideoView.this.mReleaseWhenLossAudio) {
                     GSYVideoView.this.releaseVideos();
                 } else {
@@ -404,7 +423,7 @@ public abstract class GSYVideoView
     }
 
     /**
-     * 暂时失去Audio Focus，并会很快再次获得
+     * 暂时失去Audio Focus，并会很快再次获得，暂时失去焦点仅仅暂停播放
      */
     protected void onLossTransientAudio() {
         try {
@@ -427,7 +446,6 @@ public abstract class GSYVideoView
      * @param url           播放url
      * @param cacheWithPlay 是否边播边缓存
      * @param title         title
-     * @return
      */
     public boolean setUp(String url, boolean cacheWithPlay, String title) {
         return setUp(url, cacheWithPlay, ((File) null), title);
@@ -442,14 +460,8 @@ public abstract class GSYVideoView
      * @param cachePath     缓存路径，如果是M3U8或者HLS，请设置为false
      * @param mapHeadData   头部信息
      * @param title         title
-     * @return
      */
-    public boolean setUp(String url,
-                         boolean cacheWithPlay,
-                         File cachePath,
-                         Map<String, String> mapHeadData,
-                         String title) {
-
+    public boolean setUp(String url,boolean cacheWithPlay,File cachePath,Map<String, String> mapHeadData,String title) {
         if (setUp(url, cacheWithPlay, cachePath, title)) {
             if (this.mMapHeadData != null) {
                 this.mMapHeadData.clear();
@@ -471,7 +483,6 @@ public abstract class GSYVideoView
      * @param cacheWithPlay 是否边播边缓存
      * @param cachePath     缓存路径，如果是M3U8或者HLS，请设置为false
      * @param title         title
-     * @return
      */
     public boolean setUp(String url, boolean cacheWithPlay, File cachePath, String title) {
         return setUp(url, cacheWithPlay, cachePath, title, true);
@@ -487,17 +498,12 @@ public abstract class GSYVideoView
      * @param changeState   是否修改状态
      * @return
      */
-    protected boolean setUp(String url,
-                            boolean cacheWithPlay,
-                            File cachePath,
-                            String title,
-                            boolean changeState) {
+    protected boolean setUp(String url,  boolean cacheWithPlay,  File cachePath, String title, boolean changeState) {
 
         mCache = cacheWithPlay;
         mCachePath = cachePath;
         mOriginUrl = url;
-        if (isCurrentMediaListener() &&
-                (System.currentTimeMillis() - mSaveChangeViewTIme) < CHANGE_DELAY_TIME)
+        if (isCurrentMediaListener() && (System.currentTimeMillis() - mSaveChangeViewTIme) < CHANGE_DELAY_TIME)
             return false;
         mCurrentState = CURRENT_STATE_NORMAL;
         this.mUrl = url;
@@ -506,7 +512,6 @@ public abstract class GSYVideoView
             setStateAndUi(CURRENT_STATE_NORMAL);
         return true;
     }
-
 
     /**
      * 重置
@@ -517,17 +522,20 @@ public abstract class GSYVideoView
 
     /**
      * 暂停状态
+     * （1）UI 暂停状态的显示，
+     * （2）记录当前播放位置，
+     * （3）暂停播放引擎
      */
     @Override
     public void onVideoPause() {
-        if (mCurrentState == CURRENT_STATE_PREPAREING) {
+        Log.e(TAG, "onVideoPause");
+        if (mCurrentState == CURRENT_STATE_PREPAREING) {//还未准备完成就暂停
             mPauseBeforePrepared = true;
         }
         try {
-            if (getGSYVideoManager() != null &&
-                    getGSYVideoManager().isPlaying()) {
+            if (getGSYVideoManager() != null && getGSYVideoManager().isPlaying()) {//以下做了UI 暂停状态的显示，记录当前播放位置，暂停播放引擎
                 setStateAndUi(CURRENT_STATE_PAUSE);
-                mCurrentPosition = getGSYVideoManager().getCurrentPosition();
+                mCurrentPosition = getGSYVideoManager().getCurrentPosition();//记录当前播放位置
                 if (getGSYVideoManager() != null)
                     getGSYVideoManager().pause();
             }
@@ -545,14 +553,14 @@ public abstract class GSYVideoView
     }
 
     /**
-     * 恢复暂停状态
+     * 从暂停状态恢复到播放状态
      *
      * @param seek 是否产生seek动作
      */
     @Override
     public void onVideoResume(boolean seek) {
         mPauseBeforePrepared = false;
-        if (mCurrentState == CURRENT_STATE_PAUSE) {
+        if (mCurrentState == CURRENT_STATE_PAUSE) {//暂停状态
             try {
                 if (mCurrentPosition > 0 && getGSYVideoManager() != null) {
                     if (seek) {
@@ -573,8 +581,11 @@ public abstract class GSYVideoView
 
     /**
      * 处理因切换网络而导致的问题
+     *
+     * 网络异常，释放了播放器
      */
     protected void netWorkErrorLogic() {
+        Log.e(TAG,"netWorkErrorLogic");
         final long currentPosition = getCurrentPositionWhenPlaying();
         Debuger.printfError("******* Net State Changed. renew player to connect *******" + currentPosition);
         getGSYVideoManager().releaseMediaPlayer();
@@ -601,11 +612,14 @@ public abstract class GSYVideoView
 
     /**
      * 视频已经准备好
+     * （1）mVideoAllCallBack.onPrepared()
+     * （2）开始播放
      */
     @Override
     public void onPrepared() {
 
-        if (mCurrentState != CURRENT_STATE_PREPAREING) return;
+        if (mCurrentState != CURRENT_STATE_PREPAREING)
+            return;
 
         mHadPrepared = true;
 
@@ -622,8 +636,17 @@ public abstract class GSYVideoView
         startAfterPrepared();
     }
 
+    /**
+     * （1）播放完毕移除所有空间
+     * （2）抛弃音频焦点
+     * （3）不是全屏，去掉监听GSYMediaPlayerListener
+     * （4）去掉屏幕敞亮
+     * （5）去掉网络监听
+     * （6）回调mVideoAllCallBack.onAutoComplete（）
+     */
     @Override
     public void onAutoCompletion() {
+        Log.e(TAG,"onAutoCompletion");
         setStateAndUi(CURRENT_STATE_AUTO_COMPLETE);
 
         mSaveChangeViewTIme = 0;
@@ -677,10 +700,15 @@ public abstract class GSYVideoView
 
     }
 
+    /**
+     * （1）网络异常处理，并回调mVideoAllCallBack.onPlayError()
+     * （2）设置错误状态页面
+     * （3）播放错误删除缓存文件
+     */
     @Override
     public void onError(int what, int extra) {
 
-        if (mNetChanged) {
+        if (mNetChanged) {//网络状态导致的错误
             mNetChanged = false;
             netWorkErrorLogic();
             if (mVideoAllCallBack != null) {
@@ -698,6 +726,7 @@ public abstract class GSYVideoView
         }
     }
 
+    // TODO: 2018/9/7 疑问：没看懂 要做什么
     @Override
     public void onInfo(int what, int extra) {
         if (what == MediaPlayer.MEDIA_INFO_BUFFERING_START) {
@@ -796,8 +825,7 @@ public abstract class GSYVideoView
      */
     public void release() {
         mSaveChangeViewTIme = 0;
-        if (isCurrentMediaListener() &&
-                (System.currentTimeMillis() - mSaveChangeViewTIme) > CHANGE_DELAY_TIME) {
+        if (isCurrentMediaListener() && (System.currentTimeMillis() - mSaveChangeViewTIme) > CHANGE_DELAY_TIME) {
             releaseVideos();
         }
     }
@@ -826,11 +854,11 @@ public abstract class GSYVideoView
             e.printStackTrace();
         }
 
-        addTextureView();
+        addTextureView();//添加播放的view
 
-        createNetWorkState();
+        createNetWorkState();//创建网络监听
 
-        listenerNetWorkState();
+        listenerNetWorkState();//监听网络状态
 
         mHadPlay = true;
 
@@ -838,15 +866,14 @@ public abstract class GSYVideoView
             mTextureView.onResume();
         }
 
-        if (mPauseBeforePrepared) {
+        if (mPauseBeforePrepared) {//准备完成前调用了暂停操作，暂停
             onVideoPause();
             mPauseBeforePrepared = false;
         }
     }
 
     protected boolean isCurrentMediaListener() {
-        return getGSYVideoManager().listener() != null
-                && getGSYVideoManager().listener() == this;
+        return getGSYVideoManager().listener() != null && getGSYVideoManager().listener() == this;
     }
 
     /**
@@ -946,8 +973,10 @@ public abstract class GSYVideoView
      * 根据状态判断是否播放中
      */
     public boolean isInPlayingState() {
-        return (mCurrentState >= 0 && mCurrentState != CURRENT_STATE_NORMAL
-                && mCurrentState != CURRENT_STATE_AUTO_COMPLETE && mCurrentState != CURRENT_STATE_ERROR);
+        return (mCurrentState >= 0
+                && mCurrentState != CURRENT_STATE_NORMAL
+                && mCurrentState != CURRENT_STATE_AUTO_COMPLETE
+                && mCurrentState != CURRENT_STATE_ERROR);
     }
 
     /**
@@ -1042,8 +1071,6 @@ public abstract class GSYVideoView
 
     /**
      * 设置播放过程中的回调
-     *
-     * @param mVideoAllCallBack
      */
     public void setVideoAllCallBack(VideoAllCallBack mVideoAllCallBack) {
         this.mVideoAllCallBack = mVideoAllCallBack;
@@ -1077,8 +1104,6 @@ public abstract class GSYVideoView
     /**
      * 播放中生效的播放数据
      *
-     * @param speed
-     * @param soundTouch
      */
     public void setSpeedPlaying(float speed, boolean soundTouch) {
         setSpeed(speed, soundTouch);
@@ -1133,7 +1158,7 @@ public abstract class GSYVideoView
     /**
      * 长时间失去音频焦点，暂停播放器
      *
-     * @param releaseWhenLossAudio 默认true，false的时候只会暂停
+     * @param releaseWhenLossAudio 默认true，释放播放器；false的时候只会暂停
      */
     public void setReleaseWhenLossAudio(boolean releaseWhenLossAudio) {
         this.mReleaseWhenLossAudio = releaseWhenLossAudio;

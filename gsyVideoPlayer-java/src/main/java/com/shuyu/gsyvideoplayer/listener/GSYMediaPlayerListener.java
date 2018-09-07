@@ -1,6 +1,9 @@
 package com.shuyu.gsyvideoplayer.listener;
 
 public interface GSYMediaPlayerListener {
+    /**
+     * 准备完成
+     */
     void onPrepared();
 
     void onAutoCompletion();

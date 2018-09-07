@@ -19,6 +19,7 @@ import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.SeekBar;
 import android.widget.TextView;
+
 import com.shuyu.gsyvideoplayer.R;
 import com.shuyu.gsyvideoplayer.listener.GSYVideoProgressListener;
 import com.shuyu.gsyvideoplayer.listener.LockClickListener;
@@ -195,6 +196,11 @@ public abstract class GSYVideoControlView
         super(context, fullFlag);
     }
 
+    /**
+     * 初始化
+     * （1）找控件
+     * （2）设置点击触摸事件
+     */
     protected void init(Context context) {
         super.init(context);
 
@@ -219,43 +225,44 @@ public abstract class GSYVideoControlView
         if (isInEditMode())
             return;
 
-        if (mStartButton != null) {
+        if (mStartButton != null) {//开始按钮
             mStartButton.setOnClickListener(this);
         }
 
-        if (mFullscreenButton != null) {
+        if (mFullscreenButton != null) {//全屏
             mFullscreenButton.setOnClickListener(this);
             mFullscreenButton.setOnTouchListener(this);
         }
 
-        if (mProgressBar != null) {
+        if (mProgressBar != null) {//播放的seekbar
             mProgressBar.setOnSeekBarChangeListener(this);
         }
 
-        if (mBottomContainer != null) {
+        if (mBottomContainer != null) {//底部操作栏
             mBottomContainer.setOnClickListener(this);
         }
 
-        if (mTextureViewContainer != null) {
+        if (mTextureViewContainer != null) {//渲染控件父容器
             mTextureViewContainer.setOnClickListener(this);
             mTextureViewContainer.setOnTouchListener(this);
         }
 
-        if (mProgressBar != null) {
+        if (mProgressBar != null) {//SeekBar设置触摸时间
             mProgressBar.setOnTouchListener(this);
         }
 
-        if (mThumbImageViewLayout != null) {
+        if (mThumbImageViewLayout != null) {//缩略图容器
             mThumbImageViewLayout.setVisibility(GONE);
             mThumbImageViewLayout.setOnClickListener(this);
         }
-        if (mThumbImageView != null && !mIfCurrentIsFullscreen && mThumbImageViewLayout != null) {
+        if (mThumbImageView != null && !mIfCurrentIsFullscreen && mThumbImageViewLayout != null) {//将缩略图添加到容器
             mThumbImageViewLayout.removeAllViews();
             resolveThumbImage(mThumbImageView);
         }
 
-        if (mBackButton != null)
+        if (mBackButton != null) {//返回按键
             mBackButton.setOnClickListener(this);
+        }
 
         if (mLockScreen != null) {
             mLockScreen.setVisibility(GONE);
@@ -284,6 +291,9 @@ public abstract class GSYVideoControlView
         cancelDismissControlViewTimer();
     }
 
+    /**
+     * 增加对锁屏逻辑的处理
+     */
     @Override
     public void onAutoCompletion() {
         super.onAutoCompletion();
@@ -293,6 +303,9 @@ public abstract class GSYVideoControlView
         }
     }
 
+    /**
+     * 播放异常，去掉锁屏
+     */
     @Override
     public void onError(int what, int extra) {
         super.onError(what, extra);
@@ -312,7 +325,8 @@ public abstract class GSYVideoControlView
         mCurrentState = state;
 
         if ((state == CURRENT_STATE_NORMAL && isCurrentMediaListener())
-                || state == CURRENT_STATE_AUTO_COMPLETE || state == CURRENT_STATE_ERROR) {
+                || state == CURRENT_STATE_AUTO_COMPLETE
+                || state == CURRENT_STATE_ERROR) {
             mHadPrepared = false;
         }
 
@@ -525,7 +539,6 @@ public abstract class GSYVideoControlView
      * @param url           播放url
      * @param cacheWithPlay 是否边播边缓存
      * @param title         title
-     * @return
      */
     @Override
     public boolean setUp(String url, boolean cacheWithPlay, String title) {
@@ -916,7 +929,7 @@ public abstract class GSYVideoControlView
     }
 
     protected void setSecondaryProgress(int secProgress) {
-        if (mProgressBar != null ) {
+        if (mProgressBar != null) {
             if (secProgress != 0 && !getGSYVideoManager().isCacheFile()) {
                 mProgressBar.setSecondaryProgress(secProgress);
             }
@@ -979,6 +992,7 @@ public abstract class GSYVideoControlView
 
     /**
      * 添加视频缩略图
+     *
      * @param thumb 缩略图View
      */
     protected void resolveThumbImage(View thumb) {
