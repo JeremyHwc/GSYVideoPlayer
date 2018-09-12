@@ -27,7 +27,8 @@ import java.io.File;
  * Created by shuyu on 2016/11/11.
  */
 
-public class GSYTextureView extends TextureView
+public class GSYTextureView
+        extends TextureView
         implements TextureView.SurfaceTextureListener,
         IGSYRenderView,
         MeasureHelper.MeasureFormVideoParamsListener {
@@ -68,6 +69,9 @@ public class GSYTextureView extends TextureView
         }
     }
 
+    /**
+     * 当SurfaceTexture缓冲区大小更改时调用。
+     */
     @Override
     public void onSurfaceTextureSizeChanged(SurfaceTexture surface, int width, int height) {
         if (mIGSYSurfaceListener != null) {
@@ -75,6 +79,10 @@ public class GSYTextureView extends TextureView
         }
     }
 
+    /**
+     * 当指定SurfaceTexture即将被销毁时调用。如果返回true，则调用此方法后，表面纹理中不会发生渲染。
+     * 如果返回false，则客户端需要调用release()。大多数应用程序应该返回true。
+     */
     @Override
     public boolean onSurfaceTextureDestroyed(SurfaceTexture surface) {
         //清空释放
@@ -84,6 +92,9 @@ public class GSYTextureView extends TextureView
         return true;
     }
 
+    /**
+     * 当指定SurfaceTexture的更新时调用updateTexImage()。
+     */
     @Override
     public void onSurfaceTextureUpdated(SurfaceTexture surface) {
         //如果播放的是暂停全屏了
@@ -118,10 +129,8 @@ public class GSYTextureView extends TextureView
      */
     @Override
     public Bitmap initCover() {
-        Bitmap bitmap = Bitmap.createBitmap(
-                getSizeW(), getSizeH(), Bitmap.Config.RGB_565);
+        Bitmap bitmap = Bitmap.createBitmap(getSizeW(), getSizeH(), Bitmap.Config.RGB_565);
         return getBitmap(bitmap);
-
     }
 
     /**
@@ -129,10 +138,8 @@ public class GSYTextureView extends TextureView
      */
     @Override
     public Bitmap initCoverHigh() {
-        Bitmap bitmap = Bitmap.createBitmap(
-                getSizeW(), getSizeH(), Bitmap.Config.ARGB_8888);
+        Bitmap bitmap = Bitmap.createBitmap(getSizeW(), getSizeH(), Bitmap.Config.ARGB_8888);
         return getBitmap(bitmap);
-
     }
 
 
@@ -267,9 +274,12 @@ public class GSYTextureView extends TextureView
     /**
      * 添加播放的view
      */
-    public static GSYTextureView addTextureView(Context context, ViewGroup textureViewContainer, int rotate,
+    public static GSYTextureView addTextureView(Context context,
+                                                ViewGroup textureViewContainer,
+                                                int rotate,
                                                 final IGSYSurfaceListener gsySurfaceListener,
                                                 final MeasureHelper.MeasureFormVideoParamsListener videoParamsListener) {
+
         if (textureViewContainer.getChildCount() > 0) {
             textureViewContainer.removeAllViews();
         }

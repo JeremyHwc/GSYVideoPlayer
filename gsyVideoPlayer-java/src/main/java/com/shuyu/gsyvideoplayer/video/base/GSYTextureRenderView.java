@@ -6,6 +6,7 @@ import android.support.annotation.AttrRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.Surface;
 import android.view.TextureView;
 import android.view.ViewGroup;
@@ -29,7 +30,7 @@ public abstract class GSYTextureRenderView
         implements IGSYSurfaceListener,
         MeasureHelper.MeasureFormVideoParamsListener {
 
-    protected static final String TAG="VIDEO_UI";//added by jeremy
+    protected static final String TAG = "VIDEO_UI";//added by jeremy
 
     //native绘制
     protected Surface mSurface;
@@ -75,16 +76,18 @@ public abstract class GSYTextureRenderView
 
     @Override
     public void onSurfaceAvailable(Surface surface) {
+        Log.e(TAG,"onSurfaceAvailable");
         pauseLogic(surface, (mTextureView != null && mTextureView.getShowView() instanceof TextureView));
     }
 
     @Override
     public void onSurfaceSizeChanged(Surface surface, int width, int height) {
-
+        Log.e(TAG,"onSurfaceSizeChanged");
     }
 
     @Override
     public boolean onSurfaceDestroyed(Surface surface) {
+        Log.e(TAG,"onSurfaceDestroyed");
         //清空释放
         setDisplay(null);
         //同一消息队列中去release
@@ -94,6 +97,7 @@ public abstract class GSYTextureRenderView
 
     @Override
     public void onSurfaceUpdated(Surface surface) {
+        Log.e(TAG,"onSurfaceUpdated");
         //如果播放的是暂停全屏了
         releasePauseCover();
     }
@@ -118,13 +122,20 @@ public abstract class GSYTextureRenderView
      */
     protected void addTextureView() {
         mTextureView = new GSYRenderView();
-        mTextureView.addView(getContext(), mTextureViewContainer, mRotate, this, this, mEffectFilter, mMatrixGL, mRenderer, mMode);
+        mTextureView.addView(getContext(),
+                mTextureViewContainer,
+                mRotate,
+                this,
+                this,
+                mEffectFilter,
+                mMatrixGL,
+                mRenderer,
+                mMode);
     }
 
     /**
      * 获取布局参数
      *
-     * @return
      */
     protected int getTextureParams() {
         boolean typeChanged = (GSYVideoType.getShowType() != GSYVideoType.SCREEN_TYPE_DEFAULT);

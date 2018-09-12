@@ -188,6 +188,7 @@ public abstract class GSYVideoView
                 && mSurface != null
                 && mSurface.isValid()) {
 
+
             if (getGSYVideoManager().isSurfaceSupportLockCanvas()) {//这里排除exo播放器
                 try {
                     RectF rectF = new RectF(0, 0, mTextureView.getWidth(), mTextureView.getHeight());
@@ -196,6 +197,8 @@ public abstract class GSYVideoView
                         canvas.drawBitmap(mFullPauseBitmap, null, rectF, null);
                         mSurface.unlockCanvasAndPost(canvas);
                     }
+
+                    Log.e(TAG,"showPauseCover");
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -205,7 +208,7 @@ public abstract class GSYVideoView
     }
 
     /**
-     * 清除暂停画面
+     * 清除暂停画面，回收相应的bitmap
      */
     @Override
     protected void releasePauseCover() {
@@ -216,6 +219,8 @@ public abstract class GSYVideoView
                     && mShowPauseCover) {
                 mFullPauseBitmap.recycle();
                 mFullPauseBitmap = null;
+
+                Log.e(TAG,"releasePauseCover");
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -533,7 +538,8 @@ public abstract class GSYVideoView
             mPauseBeforePrepared = true;
         }
         try {
-            if (getGSYVideoManager() != null && getGSYVideoManager().isPlaying()) {//以下做了UI 暂停状态的显示，记录当前播放位置，暂停播放引擎
+            //以下做了UI 暂停状态的显示，记录当前播放位置，暂停播放引擎
+            if (getGSYVideoManager() != null && getGSYVideoManager().isPlaying()) {
                 setStateAndUi(CURRENT_STATE_PAUSE);
                 mCurrentPosition = getGSYVideoManager().getCurrentPosition();//记录当前播放位置
                 if (getGSYVideoManager() != null)
@@ -637,7 +643,7 @@ public abstract class GSYVideoView
     }
 
     /**
-     * （1）播放完毕移除所有空间
+     * （1）播放完毕移除所有控件
      * （2）抛弃音频焦点
      * （3）不是全屏，去掉监听GSYMediaPlayerListener
      * （4）去掉屏幕敞亮

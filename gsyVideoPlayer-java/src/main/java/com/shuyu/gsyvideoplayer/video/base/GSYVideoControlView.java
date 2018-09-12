@@ -8,6 +8,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.View;
@@ -127,6 +128,7 @@ public abstract class GSYVideoControlView
     //lazy的setup
     protected boolean mSetUpLazy = false;
 
+    /*==========================================控件开始==================================================*/
     //播放按键
     protected View mStartButton;
 
@@ -162,6 +164,8 @@ public abstract class GSYVideoControlView
 
     //底部进度调
     protected ProgressBar mBottomProgressBar;
+
+    /*==========================================控件结束==================================================*/
 
     //进度定时器
     protected Timer updateProcessTimer;
@@ -203,22 +207,24 @@ public abstract class GSYVideoControlView
      */
     protected void init(Context context) {
         super.init(context);
-
+        //开始，暂停
         mStartButton = findViewById(R.id.start);
+        //顶部栏：返回，标题
         mTitleTextView = (TextView) findViewById(R.id.title);
         mBackButton = (ImageView) findViewById(R.id.back);
         mTopContainer = (ViewGroup) findViewById(R.id.layout_top);
-
+        //底部栏：当前时间，拖动条、进度条，总时间，全屏按钮
         mCurrentTimeTextView = (TextView) findViewById(R.id.current);
         mProgressBar = (SeekBar) findViewById(R.id.progress);
         mBottomProgressBar = (ProgressBar) findViewById(R.id.bottom_progressbar);
         mTotalTimeTextView = (TextView) findViewById(R.id.total);
         mFullscreenButton = (ImageView) findViewById(R.id.fullscreen);
         mBottomContainer = (ViewGroup) findViewById(R.id.layout_bottom);
-
+        //封面
         mThumbImageViewLayout = (RelativeLayout) findViewById(R.id.thumb);
+        //全屏锁
         mLockScreen = (ImageView) findViewById(R.id.lock_screen);
-
+        //加载条
         mLoadingProgressBar = findViewById(R.id.loading);
 
 
@@ -247,7 +253,7 @@ public abstract class GSYVideoControlView
             mTextureViewContainer.setOnTouchListener(this);
         }
 
-        if (mProgressBar != null) {//SeekBar设置触摸时间
+        if (mProgressBar != null) {//SeekBar设置触摸事件
             mProgressBar.setOnTouchListener(this);
         }
 
@@ -255,6 +261,7 @@ public abstract class GSYVideoControlView
             mThumbImageViewLayout.setVisibility(GONE);
             mThumbImageViewLayout.setOnClickListener(this);
         }
+
         if (mThumbImageView != null && !mIfCurrentIsFullscreen && mThumbImageViewLayout != null) {//将缩略图添加到容器
             mThumbImageViewLayout.removeAllViews();
             resolveThumbImage(mThumbImageView);
@@ -388,15 +395,15 @@ public abstract class GSYVideoControlView
         if (mHideKey && mIfCurrentIsFullscreen) {
             hideNavKey(mContext);
         }
-        if (i == R.id.start) {
+        if (i == R.id.start) {//开始按钮
             clickStartIcon();
-        } else if (i == R.id.surface_container && mCurrentState == CURRENT_STATE_ERROR) {
+        } else if (i == R.id.surface_container && mCurrentState == CURRENT_STATE_ERROR) {//视频容器，播放错误
             if (mVideoAllCallBack != null) {
                 Debuger.printfLog("onClickStartError");
                 mVideoAllCallBack.onClickStartError(mOriginUrl, mTitle, this);
             }
             prepareVideo();
-        } else if (i == R.id.thumb) {
+        } else if (i == R.id.thumb) {//点击缩略图
             if (!mThumbPlay) {
                 return;
             }
@@ -405,16 +412,16 @@ public abstract class GSYVideoControlView
                 //Toast.makeText(getActivityContext(), getResources().getString(R.string.no_url), Toast.LENGTH_SHORT).show();
                 return;
             }
-            if (mCurrentState == CURRENT_STATE_NORMAL) {
+            if (mCurrentState == CURRENT_STATE_NORMAL) {//点击缩略图播放，此时应该做出网络选择判断
                 if (isShowNetConfirm()) {
                     showWifiDialog();
                     return;
                 }
                 startPlayLogic();
-            } else if (mCurrentState == CURRENT_STATE_AUTO_COMPLETE) {
+            } else if (mCurrentState == CURRENT_STATE_AUTO_COMPLETE) {//播放完毕时点击缩略图缩略图
                 onClickUiToggle();
             }
-        } else if (i == R.id.surface_container) {
+        } else if (i == R.id.surface_container) {//渲染的容器
             if (mVideoAllCallBack != null && isCurrentMediaListener()) {
                 if (mIfCurrentIsFullscreen) {
                     Debuger.printfLog("onClickBlankFullscreen");
@@ -778,26 +785,26 @@ public abstract class GSYVideoControlView
      */
     protected void resolveUIState(int state) {
         switch (state) {
-            case CURRENT_STATE_NORMAL:
+            case CURRENT_STATE_NORMAL://正常
                 changeUiToNormal();
                 cancelDismissControlViewTimer();
                 break;
-            case CURRENT_STATE_PREPAREING:
+            case CURRENT_STATE_PREPAREING://准备中
                 changeUiToPreparingShow();
                 startDismissControlViewTimer();
                 break;
-            case CURRENT_STATE_PLAYING:
+            case CURRENT_STATE_PLAYING://播放中
                 changeUiToPlayingShow();
                 startDismissControlViewTimer();
                 break;
-            case CURRENT_STATE_PAUSE:
+            case CURRENT_STATE_PAUSE://暂停中
                 changeUiToPauseShow();
                 cancelDismissControlViewTimer();
                 break;
-            case CURRENT_STATE_ERROR:
+            case CURRENT_STATE_ERROR://播放错误
                 changeUiToError();
                 break;
-            case CURRENT_STATE_AUTO_COMPLETE:
+            case CURRENT_STATE_AUTO_COMPLETE://自动播放完毕
                 changeUiToCompleteShow();
                 cancelDismissControlViewTimer();
                 break;
@@ -817,13 +824,13 @@ public abstract class GSYVideoControlView
             //Toast.makeText(getActivityContext(), getResources().getString(R.string.no_url), Toast.LENGTH_SHORT).show();
             return;
         }
-        if (mCurrentState == CURRENT_STATE_NORMAL || mCurrentState == CURRENT_STATE_ERROR) {
+        if (mCurrentState == CURRENT_STATE_NORMAL || mCurrentState == CURRENT_STATE_ERROR) {//开始播放
             if (isShowNetConfirm()) {
                 showWifiDialog();
                 return;
             }
             startButtonLogic();
-        } else if (mCurrentState == CURRENT_STATE_PLAYING) {
+        } else if (mCurrentState == CURRENT_STATE_PLAYING) {//播放 --> 暂停
             try {
                 onVideoPause();
             } catch (Exception e) {
@@ -833,13 +840,13 @@ public abstract class GSYVideoControlView
             if (mVideoAllCallBack != null && isCurrentMediaListener()) {
                 if (mIfCurrentIsFullscreen) {
                     Debuger.printfLog("onClickStopFullscreen");
-                    mVideoAllCallBack.onClickStopFullscreen(mOriginUrl, mTitle, this);
+                    mVideoAllCallBack.onClickStopFullscreen(mOriginUrl, mTitle, this);//全屏暂停
                 } else {
                     Debuger.printfLog("onClickStop");
-                    mVideoAllCallBack.onClickStop(mOriginUrl, mTitle, this);
+                    mVideoAllCallBack.onClickStop(mOriginUrl, mTitle, this);//非全屏暂停
                 }
             }
-        } else if (mCurrentState == CURRENT_STATE_PAUSE) {
+        } else if (mCurrentState == CURRENT_STATE_PAUSE) {//暂停 --> 播放
             if (mVideoAllCallBack != null && isCurrentMediaListener()) {
                 if (mIfCurrentIsFullscreen) {
                     Debuger.printfLog("onClickResumeFullscreen");
@@ -855,7 +862,7 @@ public abstract class GSYVideoControlView
                 e.printStackTrace();
             }
             setStateAndUi(CURRENT_STATE_PLAYING);
-        } else if (mCurrentState == CURRENT_STATE_AUTO_COMPLETE) {
+        } else if (mCurrentState == CURRENT_STATE_AUTO_COMPLETE) {//播放完毕 --> 重新播放
             startButtonLogic();
         }
     }
@@ -874,6 +881,9 @@ public abstract class GSYVideoControlView
         }
     }
 
+    /**
+     * 开始播放，执行进度任务
+     */
     protected void startProgressTimer() {
         cancelProgressTimer();
         updateProcessTimer = new Timer();
@@ -893,7 +903,12 @@ public abstract class GSYVideoControlView
 
     }
 
+    /**
+     * 设置当前时间，总时间，播放进度
+     * @param secProgress
+     */
     protected void setTextAndProgress(int secProgress) {
+        Log.e(TAG,"setTextAndProgress:"+secProgress);
         int position = getCurrentPositionWhenPlaying();
         int duration = getDuration();
         int progress = position * 100 / (duration == 0 ? 1 : duration);
@@ -916,7 +931,9 @@ public abstract class GSYVideoControlView
         if (getGSYVideoManager().getBufferedPercentage() > 0) {
             secProgress = getGSYVideoManager().getBufferedPercentage();
         }
-        if (secProgress > 94) secProgress = 100;
+        if (secProgress > 94)
+            secProgress = 100;
+
         setSecondaryProgress(secProgress);
         mTotalTimeTextView.setText(CommonUtil.stringForTime(totalTime));
         if (currentTime > 0)
@@ -942,6 +959,9 @@ public abstract class GSYVideoControlView
     }
 
 
+    /**
+     * 重置 时间以及进度
+     */
     protected void resetProgressAndTime() {
         if (mProgressBar == null || mTotalTimeTextView == null || mCurrentTimeTextView == null) {
             return;
@@ -1056,6 +1076,9 @@ public abstract class GSYVideoControlView
         }
     }
 
+    /**
+     * 隐藏控制相关view
+     */
     private class DismissControlViewTimerTask extends TimerTask {
 
         @Override
@@ -1063,6 +1086,7 @@ public abstract class GSYVideoControlView
             if (mCurrentState != CURRENT_STATE_NORMAL
                     && mCurrentState != CURRENT_STATE_ERROR
                     && mCurrentState != CURRENT_STATE_AUTO_COMPLETE) {
+
                 if (getActivityContext() != null) {
                     ((Activity) getActivityContext()).runOnUiThread(new Runnable() {
                         @Override
@@ -1101,19 +1125,19 @@ public abstract class GSYVideoControlView
 
     protected abstract void hideAllWidget();
 
-    protected abstract void changeUiToNormal();
+    protected abstract void changeUiToNormal();//正常
 
-    protected abstract void changeUiToPreparingShow();
+    protected abstract void changeUiToPreparingShow();//准备中
 
-    protected abstract void changeUiToPlayingShow();
+    protected abstract void changeUiToPlayingShow();//播放中
 
-    protected abstract void changeUiToPauseShow();
+    protected abstract void changeUiToPauseShow();//暂停中
 
-    protected abstract void changeUiToError();
+    protected abstract void changeUiToError();//播放错误
 
-    protected abstract void changeUiToCompleteShow();
+    protected abstract void changeUiToCompleteShow();//播放完毕
 
-    protected abstract void changeUiToPlayingBufferingShow();
+    protected abstract void changeUiToPlayingBufferingShow();//开始缓冲
 
 
     /************************* 开放接口 *************************/

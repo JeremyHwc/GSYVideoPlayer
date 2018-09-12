@@ -149,6 +149,7 @@ public class GSYRenderView {
      * 保存截图
      */
     public void saveFrame(final File file, GSYVideoShotSaveListener gsyVideoShotSaveListener) {
+
         saveFrame(file, false, gsyVideoShotSaveListener);
     }
 
@@ -158,6 +159,7 @@ public class GSYRenderView {
      * @param high 是否需要高清的
      */
     public void saveFrame(final File file, final boolean high, final GSYVideoShotSaveListener gsyVideoShotSaveListener) {
+
         if (mShowView != null)
             mShowView.saveFrame(file, high, gsyVideoShotSaveListener);
     }
@@ -226,6 +228,12 @@ public class GSYRenderView {
 
     /*************************common function *************************/
 
+    /**
+     * 将renderview 添加到布局容器中
+     *
+     * @param textureViewContainer 父布局
+     * @param render               渲染控件
+     */
     public static void addToParent(ViewGroup textureViewContainer, View render) {
         int params = getTextureParams();
         if (textureViewContainer instanceof RelativeLayout) {
@@ -241,8 +249,7 @@ public class GSYRenderView {
 
     /**
      * 获取布局参数
-     *
-     * @return
+     * 视频显示比例如果不为默认的，则Texture就Match_parent,否则就是wrap_content
      */
     public static int getTextureParams() {
         boolean typeChanged = (GSYVideoType.getShowType() != GSYVideoType.SCREEN_TYPE_DEFAULT);

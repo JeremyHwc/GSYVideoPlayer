@@ -251,8 +251,11 @@ public abstract class GSYBaseVideoPlayer extends GSYVideoControlView {
      * 全屏的暂停的时候返回页面不黑色
      */
     private void pauseFullCoverLogic() {
-        if (mCurrentState == GSYVideoPlayer.CURRENT_STATE_PAUSE && mTextureView != null
-                && (mFullPauseBitmap == null || mFullPauseBitmap.isRecycled()) && mShowPauseCover) {
+        if (mCurrentState == GSYVideoPlayer.CURRENT_STATE_PAUSE
+                && mTextureView != null
+                && (mFullPauseBitmap == null || mFullPauseBitmap.isRecycled())
+                && mShowPauseCover) {
+
             try {
                 initCover();
             } catch (Exception e) {
@@ -510,6 +513,10 @@ public abstract class GSYBaseVideoPlayer extends GSYVideoControlView {
         }
     }
 
+    /**
+     * 返回全屏按键id
+     * @return
+     */
     protected abstract int getFullId();
 
     protected abstract int getSmallId();
